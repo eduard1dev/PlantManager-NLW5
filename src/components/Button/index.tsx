@@ -11,7 +11,7 @@ import {
 
 interface ButtonProps extends TouchableOpacityProps{
     title: string
-    isLock: boolean
+    isLock?: boolean
 }
 
 export default function Button({title, isLock, ...rest}: ButtonProps){
