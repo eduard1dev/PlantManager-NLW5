@@ -2,10 +2,13 @@ import React, {useState} from 'react'
 import { useNavigation } from '@react-navigation/core'
 import { 
     Platform, 
-    Text, 
+    Text,
+    Alert, 
 } from 'react-native'
 
 import Button from '../../components/Button'
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {
     Container,
@@ -34,6 +37,25 @@ export default function Welcome(){
         setName(value)
     }
 
+    async function handleSubmit(){
+        if(!name){
+            return Alert.alert('Digite seu nome para prosseguir')
+        } else {
+            try {
+                await AsyncStorage.setItem('@plantmanager:user', name)
+                navigation.navigate('Confirmation', {
+                    title: 'Prontinho',
+                    subtitle: 'Agora vamos começar a cuidar das suas plantinhas com muito cuidado.',
+                    buttonTitle: 'Começar',
+                    icon: 'smile',
+                    nextScreen: 'PlantSelect'
+                })
+            } catch {
+                Alert.alert('Não foi possível salvar o seu nome.')
+            }
+        }
+    }
+
     return(
         <Container
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -55,8 +77,7 @@ export default function Welcome(){
                 />
                 <Button 
                     title='Confirmar' 
-                    isLock={isFilled}
-                    onPress={() => navigation.navigate('Confirmation')}
+                    onPress={() => handleSubmit()}
                 />
             </Form>
         </Container>

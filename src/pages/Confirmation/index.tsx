@@ -3,7 +3,7 @@ import {
     Text,
 } from 'react-native'
 
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation, useRoute } from '@react-navigation/core'
 
 import Button from '../../components/Button'
 
@@ -15,25 +15,46 @@ import {
 
 } from './styles'
 
+interface Params {
+    title: string
+    subtitle: string
+    buttonTitle: string
+    icon: 'smile' | 'hug'
+    nextScreen: string
+}
+
+const emojis = {
+    hug: '😍',
+    smile: '😃',
+}
+
 export default function Confimation(){
     const navigation = useNavigation()
+    const routes = useRoute()
+
+    const { 
+        title,
+        subtitle,
+        buttonTitle,
+        icon,
+        nextScreen
+    } = routes.params as Params
 
     return(
         <Container>
             <Form>
                 <Text style={{fontSize:44}}>
-                    😃
+                    {emojis[icon]}
                 </Text>
                 <Title>
-                    Prontinho!
+                    {title}
                 </Title>
                 <Subtitle>
-                    Agora vamos começar a cuidar das suas plantinhas com muito cuidado.
+                    {subtitle}
                 </Subtitle>
                 <Button 
-                    title='Começar' 
-                    isLock={true}
-                    onPress={() => navigation.navigate('PlantSelect')}
+                    title={buttonTitle} 
+                    onPress={() => navigation.navigate(nextScreen)}
                 />
             </Form>
         </Container>
