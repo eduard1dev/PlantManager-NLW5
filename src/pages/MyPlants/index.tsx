@@ -3,13 +3,17 @@ import {
     Image,
     FlatList,
     Text,
+    Alert,
 } from 'react-native'
 
 import Header from '../../components/Header'
 import PlantCardSecundary from '../../components/PlantCardSecundary'
-import { loadPlant, PlantProps } from '../../libs/storage'
+import Load from '../../components/Load'
+
+import { loadPlant, PlantProps, removePlant } from '../../libs/storage'
 import { formatDistance } from 'date-fns'
 import { pt } from 'date-fns/locale'
+
 
 import {
     Container,
@@ -36,7 +40,7 @@ export default function MyPlants() {
             )
 
             setNextWatered(
-                `Não esqueça de regar a ${plantsStoraged[0].name} à ${nextTime} horas.`
+                `Não esqueça de regar a ${plantsStoraged[0].name} à ${nextTime}.`
             )
             
             setMyPlants(plantsStoraged)
@@ -46,6 +50,33 @@ export default function MyPlants() {
         loadStorage()
     },[])
 
+    function handleRemove(plant: PlantProps){
+        Alert.alert('Remover', `Deseja remover a ${plant.name}?`,[
+            {
+                text: 'Não',
+                style: 'cancel',
+            },
+            {
+                text: 'Sim',
+                onPress: async () => {
+                    try {
+                        await removePlant(plant.id)
+
+                        setMyPlants((oldData) => 
+                            oldData.filter((item) => item.id != plant.id)
+                        )
+
+                    } catch (error) {
+                        Alert.alert('Não foi possível remover!')
+                    }
+                }
+            }
+        ])
+    }
+
+    if(loading){
+        return <Load/>
+    }
 
     return(
         <Container>
@@ -65,7 +96,10 @@ export default function MyPlants() {
                     data={myPlants}
                     keyExtractor={(item) => String(item.id)}
                     renderItem={({item}) => (
-                        <PlantCardSecundary data={item}/>
+                        <PlantCardSecundary 
+                            data={item}
+                            handleRemove={() => handleRemove(item)}
+                        />
                     )}
                 />
             </PlantsList>

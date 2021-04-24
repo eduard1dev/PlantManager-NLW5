@@ -18,7 +18,7 @@ const AuthRoutes = () => {
                labelPosition: 'beside-icon',
                style: {
                    paddingVertical: 20,
-                   height: 88,
+                   height: 60,
                }
             }}
         >
