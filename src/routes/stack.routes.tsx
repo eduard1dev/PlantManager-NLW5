@@ -22,7 +22,7 @@ const StackRoutes: React.FC = () => (
                     backgroundColor: colors.white
                 }
             }}
-            initialRouteName='PlantSelect'
+            initialRouteName='Welcome'
         >
             <Stack.Screen name='Welcome' component={Welcome}/>
             <Stack.Screen name='Confirmation' component={Confirmation}/>
